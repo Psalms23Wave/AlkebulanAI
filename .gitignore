@@ -1,0 +1,143 @@
+# ---------------------------------------------------------------------------
+# .gitignore — Alkebulan Bantu Language Tokenizer
+# ---------------------------------------------------------------------------
+# Keep the public history clean. If you need to commit one of these paths
+# deliberately, use: git add -f <path>
+# ---------------------------------------------------------------------------
+
+# --- macOS ---
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+
+# --- Windows ---
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# --- Linux ---
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# --- Editors / IDEs ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+.cursor/
+.claude/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+.eggs/
+build/
+dist/
+wheels/
+pip-wheel-metadata/
+.installed.cfg
+*.manifest
+*.spec
+.python-version
+
+# --- Virtual environments ---
+venv/
+.venv/
+env/
+.env/
+ENV/
+env.bak/
+venv.bak/
+
+# --- Environment variables / secrets (never commit) ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.json
+credentials.json
+config.local.*
+.hf_token
+.huggingface/
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+profile_default/
+ipython_config.py
+
+# --- Pytest / coverage / mypy / linters ---
+.pytest_cache/
+.cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+.mypy_cache/
+.dmypy.json
+.pyre/
+.ruff_cache/
+
+# --- Jupyter / notebook runtime ---
+*.ipynb_backup
+
+# --- Large training artefacts we don't publish ---
+# (v1 SentencePiece model IS published; uncomment below if you later
+#  want to exclude new experimental checkpoints)
+# checkpoints/
+# runs/
+# wandb/
+# tensorboard/
+
+# --- Datasets (large or unlicensed raw data — never commit) ---
+# The small, cleared v1 sample in data/ IS committed.
+# Uncomment if you add large raw corpora:
+# data/raw/
+# data/internal/
+# *.parquet
+# *.arrow
+
+# --- OS temp / scratch ---
+*.log
+*.tmp
+*.bak
+*.orig
+tmp/
+temp/
+scratch/
+_drafts/
+_internal/
+_private/
+
+# --- Node (if we ever add JS tooling for docs) ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json.bak
+
+# --- Build outputs ---
+*.whl
+*.tar.gz
+*.zip
+!assets/*.zip    # keep any distributable zips in assets/ if we add them
+
+# --- Extraction / research scratch folders used during prep ---
+_extracted/
+_tools/

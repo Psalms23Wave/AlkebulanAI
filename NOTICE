@@ -1,0 +1,60 @@
+Alkebulan AI — Alkebulan Bantu Language Tokenizer (ABLT) & Sekan Algorithm
+Copyright (c) 2025 Mathew Sekanjako and Psalms23Wave LLC.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+-------------------------------------------------------------------------------
+
+ATTRIBUTION NOTICE (required by Apache License 2.0 §4(d))
+
+This software and all derivative works must preserve the following attribution:
+
+    "Built on Alkebulan AI / ABLT / Sekan,
+     originally invented and developed by Mathew Sekanjako
+     (https://www.psalms23wave.com), released through Psalms23Wave LLC."
+
+The Sekan algorithm — a Simpson-rule-based adaptive optimization method
+for morphologically-rich low-resource languages — was invented by
+Mathew Sekanjako in 2025 as part of the Alkebulan AI research programme.
+
+The ABLT (Alkebulan Bantu-Luganda Tokenizer) architecture — a two-stage
+morphologically-aware tokenizer combining a language-specific symbolic
+layer with a universal SentencePiece Unigram sub-word model — was
+designed by Mathew Sekanjako in 2025 as part of the same programme.
+
+-------------------------------------------------------------------------------
+
+TRADEMARK NOTICE
+
+"Alkebulan AI", "ABLT", "Alkebulan Bantu Language Tokenizer", and "Sekan"
+are trademarks of Psalms23Wave LLC. The Apache 2.0 license does NOT grant
+rights to use these marks. See TRADEMARK.md for permitted uses.
+
+-------------------------------------------------------------------------------
+
+CONTRIBUTORS
+
+See CONTRIBUTORS.md for the full list of contributors to this project.
+All contributions are received under the Apache 2.0 License and the terms
+of CLA.md (Contributor License Agreement), which grants Psalms23Wave LLC
+the rights necessary to maintain, distribute, and dual-license the project.
+
+-------------------------------------------------------------------------------
+
+THIRD-PARTY COMPONENTS
+
+This project uses the following open-source components:
+
+ * SentencePiece (Apache-2.0)           — https://github.com/google/sentencepiece
+ * PyTorch (BSD-3-Clause)               — https://pytorch.org
+ * Hugging Face Transformers (Apache-2.0) — https://github.com/huggingface/transformers
+ * PEFT (Apache-2.0)                    — https://github.com/huggingface/peft
+ * bitsandbytes (MIT)                   — https://github.com/TimDettmers/bitsandbytes
+
+The base model used for proof-of-concept fine-tuning is
+`mistralai/Mistral-7B-v0.1`, released by Mistral AI under the Apache 2.0
+License. See the Mistral AI license for terms applicable to that model.
