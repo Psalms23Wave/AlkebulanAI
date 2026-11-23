@@ -51,7 +51,7 @@ In scope:
 - The `tokenizer/` package.
 - The `sekan_algorithm/` package.
 - Example scripts and notebooks distributed in this repository.
-- Model artefacts distributed under `tokenizer/` and `data/`.
+- Model artefacts distributed under `tokenizer/` and `packages/ablt/`.
 
 Out of scope:
 

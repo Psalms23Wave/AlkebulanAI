@@ -147,15 +147,7 @@ Alkebulan Bantu Language Tokenizer Version 1/
 │   ├── sekan.py                       ← SekanOptimizer + SekanAttention
 │   └── FORMULA.md                     ← full mathematical derivation
 │
-├── linguistic_resources/              ← Luganda linguistic data
-│   ├── allophones.lg.xml              ← phonological rules
-│   └── lg_lexicon.dict                ← reference lexicon
-│
-├── data/                              ← training + validation corpora
-│   ├── MergedTok.txt                  ← 108k monolingual Luganda sentences
-│   ├── cleaned_luganda_corpus.csv     ← 38k parallel EN-LG pairs
-│   ├── luganda-approx50k.csv          ← ~50k parallel EN-LG pairs
-│   └── luganda_preprocessed.txt       ← cleaned training text
+├── DATA.md                            ← what the models were trained on, and how to rebuild them
 │
 ├── notebooks/                         ← the research notebooks (reproducible)
 │   ├── 01_ABLT_Tokenizer_Training.ipynb
@@ -340,7 +332,7 @@ already told it.
    ```bash
    jupyter notebook notebooks/01_ABLT_Tokenizer_Training.ipynb
    ```
-   Produces `luganda_spm.model` from `data/MergedTok.txt`.
+   Produces `luganda_spm.model` from the training text (see [`DATA.md`](./DATA.md)).
 
 2. Re-run the validation:
    ```bash

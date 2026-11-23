@@ -106,7 +106,7 @@ htmlcov/
 # tensorboard/
 
 # --- Datasets (large or unlicensed raw data — never commit) ---
-# The small, cleared v1 sample in data/ IS committed.
+# Training text is not committed. See DATA.md.
 # Uncomment if you add large raw corpora:
 # data/raw/
 # data/internal/

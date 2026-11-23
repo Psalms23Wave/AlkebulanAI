@@ -174,14 +174,14 @@ in the open.
 Alkebulan AI is built with material that other people made and shared. Their work is
 credited here, and it stays under their licences.
 
-| Material in this repository | Source | Licence |
+| Material | Source | Licence |
 |---|---|---|
-| Most of the Luganda text in `data/` (`cleaned_luganda_corpus.csv`, `luganda-approx50k.csv`, and part of `MergedTok.txt`) | [SALT](https://github.com/SunbirdAI/salt), by Sunbird AI | CC BY-SA 4.0 |
-| `linguistic_resources/lg_lexicon.dict` and `linguistic_resources/allophones.lg.xml` | [MARY TTS](https://github.com/marytts/marytts), by DFKI | LGPL v3 |
+| Most of the Luganda text the models were trained on | [SALT](https://github.com/SunbirdAI/salt), by Sunbird AI | CC BY-SA 4.0 |
+| Luganda word list and sound table used as reference for version 1 | [MARY TTS](https://github.com/marytts/marytts), by DFKI | LGPL v3 |
 
-If you reuse the files in `data/` or `linguistic_resources/`, credit these sources and keep
-their licences. The Apache 2.0 licence of this project covers the code written for it; it
-does not replace the licences of this material.
+This material is not kept in this repository; see [`DATA.md`](./DATA.md). The Apache 2.0
+licence of this project covers the code written for it; it does not replace the licences of
+this material.
 
 ## Removing credit
 

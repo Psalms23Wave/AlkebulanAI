@@ -6,7 +6,8 @@ Run from the repository root:
 
     python packages/ablt/tools/train_model.py
 
-It reads ``data/MergedTok.txt``, holds back one line in ten for testing (the
+It reads ``data/MergedTok.txt`` (the training text, which is not kept in the
+repository; see ``DATA.md``), holds back one line in ten for testing (the
 same split as the test of 2026-11-21), cuts the rest by grammar, and trains.
 A plain model with no grammar is trained beside it, as a check to compare with.
 """

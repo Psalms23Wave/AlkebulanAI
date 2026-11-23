@@ -62,12 +62,11 @@ This project uses the following open-source components:
 THIRD-PARTY DATA
 
  * SALT, by Sunbird AI (CC BY-SA 4.0), https://github.com/SunbirdAI/salt
-   Most of the Luganda text in data/ comes from SALT. Text taken from SALT
-   remains under CC BY-SA 4.0.
+   Most of the Luganda text the models were trained on comes from SALT.
+   Text taken from SALT remains under CC BY-SA 4.0.
  * MARY TTS Luganda lexicon and allophone set, by DFKI (LGPL v3),
    https://github.com/marytts/marytts
-   The files in linguistic_resources/ come from MARY TTS and remain under
-   the LGPL v3.
+   Used as reference material for version 1. It remains under the LGPL v3.
 
 The base model used for proof-of-concept fine-tuning is
 `mistralai/Mistral-7B-v0.1`, released by Mistral AI under the Apache 2.0

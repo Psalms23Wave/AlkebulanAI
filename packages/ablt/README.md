@@ -104,8 +104,8 @@ prefix, otherwise the longest verb extension. Each word is cut in at most one pl
 
 ## Training text and credit
 
-The bundled model was trained on 58,346 unique lines of Luganda text from `data/MergedTok.txt`
-in the Alkebulan AI repository. Most of that text comes from the SALT dataset by Sunbird AI,
+The bundled model was trained on 58,346 unique lines of Luganda text (see `DATA.md` in the
+Alkebulan AI repository). Most of that text comes from the SALT dataset by Sunbird AI,
 released under CC BY-SA 4.0. One line in ten was held back and used only for testing.
 
 ## Rebuilding the model
