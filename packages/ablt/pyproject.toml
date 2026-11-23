@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ablt"
+version = "2.0.0"
+description = "ABLT: a grammar-first tokenizer for Luganda and other Bantu languages"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "Mathew Sekanjako", email = "mathew@psalms23wave.com" }]
+maintainers = [{ name = "Psalms23Wave LLC" }]
+keywords = ["tokenizer", "Luganda", "Bantu", "African languages", "NLP", "morphology", "SentencePiece"]
+dependencies = ["sentencepiece>=0.2.0"]
+
+[project.scripts]
+ablt = "ablt.cli:main"
+
+[project.urls]
+Repository = "https://github.com/Psalms23Wave/AlkebulanAI"
+Author = "https://www.sekanjakomathew.com"
+LinkedIn = "https://www.linkedin.com/in/sekanjako-mathew/"
+Company = "https://www.psalms23wave.com"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+ablt = ["models/*.model", "models/*.json", "models/SHA256SUMS", "models/README.txt"]

@@ -1,3 +1,5 @@
+# Copyright (c) 2025-2026 Mathew Sekanjako and Psalms23Wave LLC
+# SPDX-License-Identifier: Apache-2.0
 """
 Sekan — A Simpson-Rule-Based Adaptive Optimization Algorithm
 ============================================================

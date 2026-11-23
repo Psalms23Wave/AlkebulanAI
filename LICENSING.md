@@ -21,12 +21,13 @@ terms:
 | **Code** | Everything in `tokenizer/`, `sekan_algorithm/`, `examples/` | **Apache License 2.0** ([`LICENSE`](./LICENSE)) |
 | **Model & tokenizer artefacts** | `tokenizer/luganda_spm.model`, `tokenizer/luganda_spm.vocab`, `tokenizer/ablt_v1_tokenizer.pkl` | **Apache License 2.0** |
 | **Trademarks** | The names *Alkebulan AI*, *ABLT*, *Sekan*, *Alkebulan Bantu Language Tokenizer* | **Reserved** — see [`TRADEMARK.md`](./TRADEMARK.md) |
+| **Data and language resources from others** | The Luganda text in `data/`; the lexicon and allophone files in `linguistic_resources/` | **Their own licences**: SALT by Sunbird AI is CC BY-SA 4.0; the MARY TTS files by DFKI are LGPL v3 |
 
-*Data corpora under `data/` are aggregated from multiple public
-sources. We are in the process of tagging each file with its
-upstream license; please treat them as research-only for now and
-consult the notebook references in [`notebooks/`](./notebooks/) for
-the original sources.*
+*Most of the text in `data/` comes from the SALT dataset by Sunbird AI,
+and the files in `linguistic_resources/` come from MARY TTS by DFKI.
+They are credited in [`ATTRIBUTION.md`](./ATTRIBUTION.md) and in the
+[`NOTICE`](./NOTICE), and they stay under their own licences. The
+Apache 2.0 licence of this project does not replace them.*
 
 ---
 

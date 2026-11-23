@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use ABLT, please cite it as below."
+title: "ABLT: a grammar-first tokenizer for Luganda and other Bantu languages"
+type: software
+authors:
+  - family-names: Sekanjako
+    given-names: Mathew
+    affiliation: Psalms23Wave LLC
+    website: "https://www.sekanjakomathew.com"
+version: 2.0.0
+date-released: 2026-11-23
+license: Apache-2.0
+repository-code: "https://github.com/Psalms23Wave/AlkebulanAI"
+keywords:
+  - tokenizer
+  - Luganda
+  - Bantu languages
+  - African languages
+  - morphology

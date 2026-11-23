@@ -1,5 +1,5 @@
 Alkebulan AI — Alkebulan Bantu Language Tokenizer (ABLT) & Sekan Algorithm
-Copyright (c) 2025 Mathew Sekanjako and Psalms23Wave LLC.
+Copyright (c) 2025-2026 Mathew Sekanjako and Psalms23Wave LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,6 +25,10 @@ The ABLT (Alkebulan Bantu-Luganda Tokenizer) architecture — a two-stage
 morphologically-aware tokenizer combining a language-specific symbolic
 layer with a universal SentencePiece Unigram sub-word model — was
 designed by Mathew Sekanjako in 2025 as part of the same programme.
+
+Author: Mathew Sekanjako
+        https://www.sekanjakomathew.com
+        https://www.linkedin.com/in/sekanjako-mathew/
 
 -------------------------------------------------------------------------------
 
@@ -54,6 +58,16 @@ This project uses the following open-source components:
  * Hugging Face Transformers (Apache-2.0) — https://github.com/huggingface/transformers
  * PEFT (Apache-2.0)                    — https://github.com/huggingface/peft
  * bitsandbytes (MIT)                   — https://github.com/TimDettmers/bitsandbytes
+
+THIRD-PARTY DATA
+
+ * SALT, by Sunbird AI (CC BY-SA 4.0), https://github.com/SunbirdAI/salt
+   Most of the Luganda text in data/ comes from SALT. Text taken from SALT
+   remains under CC BY-SA 4.0.
+ * MARY TTS Luganda lexicon and allophone set, by DFKI (LGPL v3),
+   https://github.com/marytts/marytts
+   The files in linguistic_resources/ come from MARY TTS and remain under
+   the LGPL v3.
 
 The base model used for proof-of-concept fine-tuning is
 `mistralai/Mistral-7B-v0.1`, released by Mistral AI under the Apache 2.0

@@ -219,7 +219,7 @@ its morphology**.
 
 Everything needed to extend this proof to the other families
 listed above is on this repository, documented, and released under
-a permissive (non-commercial, attribution-preserving) license.
+a permissive, attribution-preserving license (Apache 2.0).
 
 ---
 

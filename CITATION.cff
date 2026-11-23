@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use Alkebulan AI, ABLT or the Sekan algorithm, please cite it as below."
+title: "Alkebulan AI: A Morphologically-Faithful Tokenization and Simpson-Rule Optimization Framework for African Languages"
+type: software
+authors:
+  - family-names: Sekanjako
+    given-names: Mathew
+    affiliation: Psalms23Wave LLC
+    website: "https://www.sekanjakomathew.com"
+date-released: 2026-04-18
+license: Apache-2.0
+repository-code: "https://github.com/Psalms23Wave/AlkebulanAI"
+url: "https://www.psalms23wave.com"
+keywords:
+  - tokenizer
+  - optimizer
+  - Luganda
+  - Bantu languages
+  - African languages
+  - low-resource NLP

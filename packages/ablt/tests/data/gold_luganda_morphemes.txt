@@ -1,0 +1,12 @@
+# Answer key for testing where a tokenizer cuts Luganda words.
+# "|" marks a cut that must be there. "~" marks a cut that is also acceptable.
+# 83 words, first written on 2026-11-21. A Luganda speaker should check this list.
+o~mu|ntu a~ba|ntu o~mu|kazi a~ba|kazi o~mu|sajja a~ba|sajja o~mu|lenzi a~ba|lenzi o~mu|wala a~ba|wala
+o~mu|limi a~ba|limi o~mu|sawo a~ba|sawo o~mu|yizi a~ba|yizi o~mu|ti e~mi|ti o~mu|gga e~mi|gga
+o~mu|limu e~mi|rimu o~mu|zannyo e~mi|zannyo e~ki|tabo e~bi|tabo e~ki|ntu e~bi|ntu e~ki|bira e~bi|bira
+e~ki|buga e~bi|buga e~ki|zimbe e~bi|zimbe e~ki|biina e~bi|biina o~lu|ganda o~lu|limi o~lu|guudo o~lu|naku
+a~ka|tale o~bu|tale a~ma|zzi a~ma|ta a~ma|gezi a~ma|nnya o~bu|lamu o~bu|yambi o~bu|sobozi
+o~ku|ly~a o~ku|som~a o~ku|yig~a o~ku|kol~a o~ku|gend~a o~ku|lab~a o~ku|wandiik~a o~ku|yimb~a o~ku|zanny~a
+a|som~a ba|som~a tu|som~a ba|kol~a a|kol~a tu|kol~a tu|lab~a ba|lab~a ba|gend~a tu|gend~a ba|yig~a a|yimb~a
+a|li|som~a ba|li|kol~a tu|li|gend~a te|ba|kol~a te|tu|gend~a si|som~a
+ba|som|es~a a|som|er~a ki|kol|ebw~a ba|lab|ibw~a tu|kol|er~a ba|a|som~a y~a|som~a

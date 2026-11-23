@@ -4,9 +4,9 @@
 > uses Alkebulan AI, ABLT, or the Sekan algorithm must credit the
 > originator. This page tells you exactly how.
 
-**Originator:** Mathew Sekanjako
+**Originator:** Mathew Sekanjako ([sekanjakomathew.com](https://www.sekanjakomathew.com), [LinkedIn](https://www.linkedin.com/in/sekanjako-mathew/))
 **Entity:** Psalms23Wave LLC — [www.psalms23wave.com](https://www.psalms23wave.com)
-**Year:** 2025
+**Year:** 2025 (first release); 2026 (version 2)
 **License:** Apache License 2.0 (code) — see [`LICENSE`](./LICENSE) and [`NOTICE`](./NOTICE)
 
 ---
@@ -166,3 +166,26 @@ in the open.
 — **Mathew Sekanjako**
   Founder, Psalms23Wave LLC
   [www.psalms23wave.com](https://www.psalms23wave.com)
+
+---
+
+## Credit to others: data and language resources
+
+Alkebulan AI is built with material that other people made and shared. Their work is
+credited here, and it stays under their licences.
+
+| Material in this repository | Source | Licence |
+|---|---|---|
+| Most of the Luganda text in `data/` (`cleaned_luganda_corpus.csv`, `luganda-approx50k.csv`, and part of `MergedTok.txt`) | [SALT](https://github.com/SunbirdAI/salt), by Sunbird AI | CC BY-SA 4.0 |
+| `linguistic_resources/lg_lexicon.dict` and `linguistic_resources/allophones.lg.xml` | [MARY TTS](https://github.com/marytts/marytts), by DFKI | LGPL v3 |
+
+If you reuse the files in `data/` or `linguistic_resources/`, credit these sources and keep
+their licences. The Apache 2.0 licence of this project covers the code written for it; it
+does not replace the licences of this material.
+
+## Removing credit
+
+The copyright notices in the source files, the `LICENSE` and the `NOTICE` identify the
+author and owner of this work. Apache License 2.0 sections 4(c) and 4(d) require them to be
+kept. Under United States law (17 U.S.C. 1202), intentionally removing or altering copyright
+management information to conceal infringement is also prohibited.

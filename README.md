@@ -38,6 +38,23 @@
 
 ---
 
+## New: ABLT version 2
+
+ABLT version 2 is in [`packages/ablt/`](./packages/ablt/). It installs as a package and
+works from the terminal:
+
+```bash
+pip install "git+https://github.com/Psalms23Wave/AlkebulanAI#subdirectory=packages/ablt"
+ablt --cuts "Abantu baagala okusoma ebitabo."
+# Aba|ntu ba|agala oku|soma ebi|tabo.
+```
+
+Version 2 gives back the exact text when decoding, cuts capitalised words, and leaves
+names whole. Measurements and how to repeat them are in the
+[package guide](./packages/ablt/README.md). Version 1 stays in `tokenizer/`, unchanged.
+
+---
+
 ## Why this project exists
 
 Modern tokenizers — BPE, WordPiece, standard SentencePiece — are trained
