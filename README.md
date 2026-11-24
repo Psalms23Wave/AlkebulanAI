@@ -42,6 +42,9 @@ A tokenizer for Luganda that cuts words where their meaning changes, using the g
 the language, before a statistical tokenizer (SentencePiece) takes over. It installs as a
 package and works from the terminal.
 
+On PyPI: [pypi.org/project/ablt](https://pypi.org/project/ablt/). On Hugging Face:
+[huggingface.co/Psalms23Wave/ablt-luganda](https://huggingface.co/Psalms23Wave/ablt-luganda).
+
 ```bash
 pip install ablt
 
