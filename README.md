@@ -2,7 +2,7 @@
 
 <img src="assets/psalms23wave_logo.png" alt="Psalms23Wave" width="420" />
 
-# Alkebulan Bantu Language Tokenizer — Version 1 (ABLT v1)
+# Alkebulan Bantu Language Tokenizer (ABLT)
 
 ### *The first morphologically-aware tokenizer for Luganda, built from scratch.*
 ### Powered by the **Sekan** algorithm — a Simpson-rule-based optimizer invented for agglutinative African languages.
@@ -17,7 +17,7 @@
 **Owner:** [Psalms23Wave LLC](https://www.psalms23wave.com)
 **Contact:** [`psalms23wave.com/contact`](https://www.psalms23wave.com/contact)
 **GitHub:** [github.com/Psalms23Wave](https://github.com/Psalms23Wave) &nbsp;•&nbsp; **Hugging Face:** [Psalms23Wave/Alkebulan-AI](https://huggingface.co/Psalms23Wave/Alkebulan-AI)
-**Status:** v1.0.0 — validated, reproducible, open-sourced
+**Status:** version 2.0.0 (November 2026). Version 1 was the first release and is kept here.
 
 </div>
 
@@ -36,77 +36,57 @@
 
 ---
 
----
+## ABLT version 2
 
-## New: ABLT version 2
-
-ABLT version 2 is in [`packages/ablt/`](./packages/ablt/). It installs as a package and
-works from the terminal:
+A tokenizer for Luganda that cuts words where their meaning changes, using the grammar of
+the language, before a statistical tokenizer (SentencePiece) takes over. It installs as a
+package and works from the terminal.
 
 ```bash
 pip install "git+https://github.com/Psalms23Wave/AlkebulanAI#subdirectory=packages/ablt"
+
 ablt --cuts "Abantu baagala okusoma ebitabo."
 # Aba|ntu ba|agala oku|soma ebi|tabo.
 ```
 
-Version 2 gives back the exact text when decoding, cuts capitalised words, and leaves
-names whole. Measurements and how to repeat them are in the
-[package guide](./packages/ablt/README.md). Version 1 stays in `tokenizer/`, unchanged.
+```python
+from ablt import ABLT
 
----
+tokenizer = ABLT()
+ids = tokenizer.encode("Abantu basoma ebitabo.")
+tokenizer.decode(ids)
+# 'Abantu basoma ebitabo.'   (exactly the text that went in)
+```
 
-## Why this project exists
+### What was measured
 
-Modern tokenizers — BPE, WordPiece, standard SentencePiece — are trained
-on Western, predominantly English corpora. When I tried to fine-tune
-Mistral-7B on Luganda, they failed catastrophically. A single Luganda
-word like `Abanoonyiboobubudamu` ("refugees") was shattered into 9–11
-meaningless sub-pieces. The model never saw the **prefix–root–suffix**
-structure that carries *all* the meaning in Bantu languages.
+| Test | ABLT version 2 | Plain SentencePiece trained on the same text, same size |
+|---|---|---|
+| Cuts fall on grammar boundaries, 83 Luganda words (F1) | 91.7% | 41.3% |
+| The same words written with a capital letter | 93.3% | 72.7% |
+| Pieces per word, 7,060 sentences of MasakhaNER 2.0 Luganda | 2.20 | 1.94 |
+| Decoding gives back the exact text, 13,542 sentences | 13,542 of 13,542 | |
 
-Fixing the tokenizer alone was not enough. The gradients coming off
-those long agglutinated tokens spiked unpredictably, and every
-off-the-shelf optimizer (SGD, AdamW) amplified the spikes instead of
-damping them.
+The plain tokenizer is a check with no grammar rules. It makes fewer pieces because it
+leaves most words whole; ABLT cuts on purpose, at the grammar. How each number was measured,
+how to repeat it, and the limits are in the [package guide](./packages/ablt/README.md).
 
-So I built two things from scratch:
+### What changed from version 1
 
-1. **ABLT** — a morphologically-aware tokenizer that *respects* Bantu
-   structure before a single neural weight is touched.
-2. **Sekan** — a Simpson-rule-based optimizer that treats gradient
-   history as a continuous integrable function and replaces the noisy
-   instantaneous gradient with a 4th-order-accurate estimate of the
-   true descent direction.
+- Decoding gives back the exact text, for every sentence tested.
+- Words that start with a capital letter are cut like any other word.
+- Names and acronyms in the middle of a sentence are left whole.
+- A root is the same piece alone and after a prefix (`ntu` in `abantu`, `omuntu`, `ekintu`),
+  so a model learns each root once.
 
-This repository is the distributable form of that work. You can load
-the tokenizer with a two-line import, swap `AdamW` for `SekanOptimizer`
-in one line, and reproduce every benchmark I report.
-
----
-
-## At a glance
-
-| | |
-|---|---|
-| **Language (v1)** | Luganda (Bantu family, Uganda) |
-| **Base model tested** | `mistralai/Mistral-7B-v0.1` |
-| **Tokenizer algorithm** | SentencePiece **Unigram** + rule-based morphological pre-segmenter |
-| **Vocabulary size** | 5,795 |
-| **Training corpus** | 108,765 monolingual Luganda sentences + ~88k parallel EN–LG pairs |
-| **Morpheme preservation** | **100.00 %** (vs 61 % mBERT, 57 % XLM-R) |
-| **OOV rate** | **0.00 %** (vs 3.8 % mBERT, 2.1 % XLM-R) |
-| **Tokens per Luganda sentence** | **11.4** (vs 29.8 mBERT — 2.6× fewer tokens) |
-| **Optimizer** | **Sekan** (Simpson 1/3 rule) — see [`sekan_algorithm/`](./sekan_algorithm/) |
-| **Training** | QLoRA (4-bit NF4, r=8, α=32) on NVIDIA A100 (RunPod + Colab Pro) |
-| **Final eval loss** | 4.9621 (monotonic, 600 steps, no divergence) |
-| **Deployment** | [huggingface.co/Psalms23Wave/Alkebulan-AI](https://huggingface.co/Psalms23Wave/Alkebulan-AI) |
+The grammar rules are the version 1 rules, unchanged.
 
 ---
 
 ## Repository layout
 
 ```
-Alkebulan Bantu Language Tokenizer Version 1/
+AlkebulanAI/
 ├── README.md                          ← you are here
 ├── VISION.md                          ← thesis-grade framing: blueprint for all African languages
 │
@@ -115,6 +95,7 @@ Alkebulan Bantu Language Tokenizer Version 1/
 ├── LICENSING.md                       ← plain-English licensing guide
 ├── TRADEMARK.md                       ← "Alkebulan AI" / "Sekan" marks policy
 ├── ATTRIBUTION.md                     ← how to cite / credit the project
+├── CITATION.cff                       ← citation details (GitHub shows "Cite this repository")
 ├── COMMERCIAL.md                      ← commercial & enterprise licensing contact
 ├── CONTRIBUTING.md                    ← contributor rules and workflow
 ├── CLA.md                             ← contributor license agreement
@@ -135,7 +116,13 @@ Alkebulan Bantu Language Tokenizer Version 1/
 │       ├── feature_request.md
 │       └── new_language.md
 │
-├── tokenizer/                         ← the tokenizer package
+├── packages/
+│   └── ablt/                          ← ABLT version 2: the installable package (start here)
+│       ├── src/ablt/                  ← the tokenizer, the grammar rules, the trained model
+│       ├── tests/                     ← tests and the answer list
+│       └── tools/                     ← train and score the model
+│
+├── tokenizer/                         ← ABLT version 1
 │   ├── __init__.py
 │   ├── ablt_tokenizer.py              ← ABLT class (import this)
 │   ├── luganda_spm.model              ← trained SentencePiece model
@@ -170,7 +157,58 @@ Alkebulan Bantu Language Tokenizer Version 1/
 
 ---
 
-## Installation
+## Version 1, where it started (2025)
+
+Version 1 is the first release of this work: the first ABLT tokenizer and the Sekan
+optimizer, built in 2025 while fine-tuning Mistral-7B on Luganda. It is kept here as it was
+released, in [`tokenizer/`](./tokenizer/) and [`sekan_algorithm/`](./sekan_algorithm/). The
+numbers in this section are as reported in the first release.
+
+### Why this project exists
+
+Modern tokenizers — BPE, WordPiece, standard SentencePiece — are trained
+on Western, predominantly English corpora. When I tried to fine-tune
+Mistral-7B on Luganda, they failed catastrophically. A single Luganda
+word like `Abanoonyiboobubudamu` ("refugees") was shattered into 9–11
+meaningless sub-pieces. The model never saw the **prefix–root–suffix**
+structure that carries *all* the meaning in Bantu languages.
+
+Fixing the tokenizer alone was not enough. The gradients coming off
+those long agglutinated tokens spiked unpredictably, and every
+off-the-shelf optimizer (SGD, AdamW) amplified the spikes instead of
+damping them.
+
+So I built two things from scratch:
+
+1. **ABLT** — a morphologically-aware tokenizer that *respects* Bantu
+   structure before a single neural weight is touched.
+2. **Sekan** — a Simpson-rule-based optimizer that treats gradient
+   history as a continuous integrable function and replaces the noisy
+   instantaneous gradient with a 4th-order-accurate estimate of the
+   true descent direction.
+
+This repository is the distributable form of that work. You can load
+the tokenizer with a two-line import, swap `AdamW` for `SekanOptimizer`
+in one line, and reproduce every benchmark I report.
+
+### At a glance
+
+| | |
+|---|---|
+| **Language (v1)** | Luganda (Bantu family, Uganda) |
+| **Base model tested** | `mistralai/Mistral-7B-v0.1` |
+| **Tokenizer algorithm** | SentencePiece **Unigram** + rule-based morphological pre-segmenter |
+| **Vocabulary size** | 5,795 |
+| **Training corpus** | 108,765 monolingual Luganda sentences + ~88k parallel EN–LG pairs |
+| **Morpheme preservation** | **100.00 %** (vs 61 % mBERT, 57 % XLM-R) |
+| **OOV rate** | **0.00 %** (vs 3.8 % mBERT, 2.1 % XLM-R) |
+| **Tokens per Luganda sentence** | **11.4** (vs 29.8 mBERT — 2.6× fewer tokens) |
+| **Optimizer** | **Sekan** (Simpson 1/3 rule) — see [`sekan_algorithm/`](./sekan_algorithm/) |
+| **Training** | QLoRA (4-bit NF4, r=8, α=32) on NVIDIA A100 (RunPod + Colab Pro) |
+| **Final eval loss** | 4.9621 (monotonic, 600 steps, no divergence) |
+| **Deployment** | [huggingface.co/Psalms23Wave/Alkebulan-AI](https://huggingface.co/Psalms23Wave/Alkebulan-AI) |
+
+### Installation (version 1)
 
 ```bash
 # 1. create and activate a virtual environment (recommended)
@@ -183,9 +221,7 @@ pip install -r requirements.txt
 The minimal runtime is `sentencepiece`. The Sekan optimizer requires
 `torch`. `transformers` is only needed for the comparison benchmark.
 
----
-
-## Quickstart — the tokenizer
+### Quickstart — the version 1 tokenizer
 
 ```python
 from tokenizer.ablt_tokenizer import ABLT
@@ -217,9 +253,7 @@ Compare against mBERT and XLM-R on the same input:
 python examples/compare_tokenizers.py
 ```
 
----
-
-## Quickstart — the Sekan optimizer
+### Quickstart — the Sekan optimizer
 
 Drop-in replacement for AdamW. Two hyper-parameters. No warmup.
 
@@ -245,9 +279,7 @@ for batch in dataloader:
 The full mathematical derivation and ablation study live in
 [`sekan_algorithm/FORMULA.md`](./sekan_algorithm/FORMULA.md).
 
----
-
-## The Sekan algorithm — short version
+### The Sekan algorithm — short version
 
 I named this algorithm **Sekan** after myself. It is the centrepiece of
 the Alkebulan AI research.
@@ -290,9 +322,7 @@ with the same Simpson pattern along the key axis — sharpening
 attention toward the *interior* of an agglutinated word where the root
 morpheme lives.
 
----
-
-## What ABLT actually does — the pipeline
+### What ABLT actually does — the pipeline
 
 ```
 raw Luganda text
@@ -324,9 +354,7 @@ and 0% OOV** on the validation set — the neural vocabulary never has
 to guess where a morpheme starts or ends, because the symbolic layer
 already told it.
 
----
-
-## Reproducing the results
+### Reproducing the version 1 results
 
 1. Re-train the tokenizer from scratch:
    ```bash
@@ -344,16 +372,14 @@ already told it.
    checkpoint at
    [huggingface.co/Psalms23Wave/Alkebulan-AI](https://huggingface.co/Psalms23Wave/Alkebulan-AI).
 
----
-
-## Screenshots from the notebooks
+### Screenshots from the notebooks
 
 Direct captures from `notebooks/01_ABLT_Tokenizer_Training.ipynb` and
 `notebooks/02_ABLT_Tokenizer_Validation.ipynb`, in the natural order of
 the ABLT workflow: raw data → DataFrame load → multilingual
 tokenization → token-importance scoring.
 
-### 1. Raw parallel corpus dataset  (`luganda-approx50k.csv`)
+#### 1. Raw parallel corpus dataset  (`luganda-approx50k.csv`)
 ![Raw parallel corpus](assets/01_raw_parallel_corpus_dataset.png)
 
 The raw CSV that feeds both the tokenizer training and the LLM fine-
@@ -363,7 +389,7 @@ idiomatic ("They urged us to respect each other."), domain-specific
 ("Health workers will receive free transport…") — exactly what a
 production tokenizer must handle.
 
-### 2. Parallel corpus load into a DataFrame
+#### 2. Parallel corpus load into a DataFrame
 ![Parallel corpus DataFrame load](assets/02_parallel_corpus_dataframe_load.png)
 
 Loading the cleaned English–Luganda corpus into pandas. Final
@@ -373,7 +399,7 @@ as the `Skipping line N with 3 columns` log). Columns:
 row 0: *"It's the government's responsibility to teach…"* ⇄
 *"Buvunaanyizibwa bwa gavumenti okusomesa abantu…"*.
 
-### 3. English vs Luganda tokenization comparison
+#### 3. English vs Luganda tokenization comparison
 ![English vs Luganda tokenization](assets/03_english_vs_luganda_tokenization.png)
 
 Side-by-side tokenization of the same sentence in both languages. On
@@ -384,7 +410,7 @@ surfaces genuine morphemes — noun-class prefixes (`_B_`, `_uvu`,
 themselves. This is exactly the morpheme-aligned signal a Bantu LLM
 needs to learn meaning from.
 
-### 4. Token-importance scoring & full pipeline
+#### 4. Token-importance scoring & full pipeline
 ![Token importance scoring](assets/04_token_importance_scoring.png)
 
 Complete pipeline in a single cell, using the public API:
@@ -477,22 +503,23 @@ mis-segments them for the same reason it mis-segments Luganda.
 Therefore, the same two-stage cure — *symbolic morphology above,
 Simpson-stabilised neural training below* — works for all of them.
 
-### v1 → v2 → v3 — the roadmap
+### The roadmap
 
-**v1 (this release).** Luganda. Proves the method end-to-end:
-tokenizer (100% morpheme preservation, 0% OOV), optimizer (Sekan,
-lower loss + lower variance than AdamW), deployed fine-tuned LLM
-on Hugging Face.
+**Version 1 (2025).** Luganda. The first tokenizer, the Sekan optimizer, and a fine-tuned
+LLM on Hugging Face.
 
-**v2 (next).** Drop in rule layers for Lusoga, Runyankore, Rukiga,
-and Kinyarwanda. Share a single cross-Bantu SentencePiece
-vocabulary (the statistical layer transfers for free between
-closely-related Bantu languages). Extend Sekan with a confidence-
-weighted adaptive window.
+**Version 2 (this release).** The Luganda tokenizer rebuilt as an installable package:
+exact decoding, capitalised words, names left whole, shared roots.
 
-**v3 (research).** Non-Bantu African families: Amharic, Swahili,
-Yoruba, Wolof, Somali. Multi-layer rule composition for code-mixed
-speech (the dominant register across urban Africa).
+**Next.** Rule layers for Lusoga, Runyankore, Rukiga and Kinyarwanda, with a shared
+cross-Bantu SentencePiece vocabulary (the statistical layer transfers for free between
+closely-related Bantu languages). Extend Sekan with a confidence-weighted adaptive window.
+A test of whether a model learns Luganda from less
+text with a grammar-first tokenizer.
+
+**Research.** Non-Bantu African families: Amharic, Swahili, Yoruba, Wolof, Somali.
+Multi-layer rule composition for code-mixed speech (the dominant register across urban
+Africa).
 
 **Endgame.** A single `from_pretrained("alkebulan/xx-YY")` entry
 point, where `xx-YY` is any of the languages listed above, producing
@@ -542,6 +569,8 @@ live at
   url          = {https://huggingface.co/Psalms23Wave/Alkebulan-AI}
 }
 ```
+
+GitHub's "Cite this repository" button uses [`CITATION.cff`](./CITATION.cff).
 
 ---
 
@@ -608,5 +637,5 @@ correctly — e.g. *"Commercial licensing — Alkebulan AI"*,
 and *"Sekan"* are trademarks of Psalms23Wave LLC. See [`TRADEMARK.md`](./TRADEMARK.md).
 **Commercial licensing:** see [`COMMERCIAL.md`](./COMMERCIAL.md).
 
-Copyright © 2025 Mathew Sekanjako and Psalms23Wave LLC.
+Copyright © 2025-2026 Mathew Sekanjako and Psalms23Wave LLC.
 All rights reserved except those granted under Apache 2.0.
