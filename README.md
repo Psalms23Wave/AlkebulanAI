@@ -43,7 +43,7 @@ the language, before a statistical tokenizer (SentencePiece) takes over. It inst
 package and works from the terminal.
 
 ```bash
-pip install "git+https://github.com/Psalms23Wave/AlkebulanAI#subdirectory=packages/ablt"
+pip install ablt
 
 ablt --cuts "Abantu baagala okusoma ebitabo."
 # Aba|ntu ba|agala oku|soma ebi|tabo.

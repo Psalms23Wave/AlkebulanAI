@@ -11,7 +11,7 @@ Alkebulan AI.
 ## Install
 
 ```bash
-pip install "git+https://github.com/Psalms23Wave/AlkebulanAI#subdirectory=packages/ablt"
+pip install ablt
 ```
 
 It needs only `sentencepiece`. The trained Luganda model is inside the package.
