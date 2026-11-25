@@ -28,19 +28,19 @@ Psalms23Wave LLC, as part of Alkebulan AI.
 ```bash
 pip install ablt
 
-ablt --cuts "Abanoonyiboobubudamu tebasobola kusoma, naye alisoma enkya."
-# Aba|noonyi|bo|obu|budamu te|ba|sobola ku|soma, n|aye a|li|soma en|kya.
+ablt --cuts "Abanoonyiboobubudamu beetaaga obuyambi."
+# Aba|noonyi|bo|obu|budamu b|eetaaga obu|yambi.
 ```
 
-The sentence means "Refugees cannot read, but he or she will read tomorrow." Each `|` is a
-cut at a grammar boundary: `te|ba|sobola` is not + they + be able, and `a|li|soma` is
-he or she + will + read.
+The sentence means "Refugees need help." Each `|` is a cut at a grammar boundary. The
+first word is two words written as one, *abanoonyi* (seekers) and *b'obubudamu* (of refuge),
+and ABLT cuts it into the people + seek + of + the noun marker + refuge.
 
 ```python
 from ablt import ABLT
 
 tokenizer = ABLT()
-text = "Abanoonyiboobubudamu tebasobola kusoma, naye alisoma enkya."
+text = "Abanoonyiboobubudamu beetaaga obuyambi."
 
 ids = tokenizer.encode(text)
 tokenizer.decode(ids) == text

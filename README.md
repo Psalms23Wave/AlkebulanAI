@@ -48,8 +48,8 @@ On PyPI: [pypi.org/project/ablt](https://pypi.org/project/ablt/). On Hugging Fac
 ```bash
 pip install ablt
 
-ablt --cuts "Abanoonyiboobubudamu tebasobola kusoma, naye alisoma enkya."
-# Aba|noonyi|bo|obu|budamu te|ba|sobola ku|soma, n|aye a|li|soma en|kya.
+ablt --cuts "Abanoonyiboobubudamu beetaaga obuyambi."
+# Aba|noonyi|bo|obu|budamu b|eetaaga obu|yambi.
 ```
 
 ```python
