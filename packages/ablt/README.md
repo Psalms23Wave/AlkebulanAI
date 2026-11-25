@@ -1,8 +1,8 @@
 # ABLT
 
-**Alkebulan Bantu-Luganda Tokenizer, version 2.1.** A tokenizer for Luganda that cuts words
-where their meaning changes, using the grammar of the language, before a statistical
-tokenizer (SentencePiece) takes over.
+ABLT is the Alkebulan Bantu-Luganda Tokenizer, version 2.1. It cuts Luganda words where
+their meaning changes, using the grammar of the language, and then lets a statistical
+tokenizer (SentencePiece) cut the rest.
 
 Built by Mathew Sekanjako ([sekanjakomathew.com](https://www.sekanjakomathew.com),
 [LinkedIn](https://www.linkedin.com/in/sekanjako-mathew/)), Psalms23Wave LLC, as part of
@@ -37,7 +37,7 @@ tokenizer.morphemes("okusoma")
 # ['oku', 'soma']
 ```
 
-### From the terminal, with no Python to write
+### From the terminal
 
 ```bash
 ablt "Abantu baagala okusoma ebitabo."
@@ -73,15 +73,16 @@ to reproduce these.
 
 The plain tokenizer is a check built for this comparison: it is trained on the same text
 with the same settings and has no grammar rules. It makes fewer pieces because it leaves
-most words whole. ABLT cuts on purpose, at the grammar.
+most words whole, where ABLT cuts them at the grammar.
 
 On the same MasakhaNER sentences, the tokenizers of two general models make 2.69 pieces per
 word (Qwen2.5) and 2.89 (GPT-2).
 
 ### Checks on data the rules were not written from
 
-The 83 words were in view while version 2.1 was built, so two outside sets were used as
-well. Each was split in two; the rules were tuned on one half and are reported on the other.
+The 83 words were in view while version 2.1 was built, so the rules were also checked on
+two public sets. Each set was split in two, the rules were tuned on one half, and the
+numbers below come from the other half.
 
 | Check | ABLT 2.1 | ABLT 2.0 |
 |---|---|---|
@@ -107,7 +108,7 @@ A word is now cut in as many places as its grammar shows.
 | abanoonyiboobubudamu (refugees) | `aba + noonyiboobubudamu` | `aba + noonyi + bo + obu + budamu` |
 | abantu (people) | `aba + ntu` | `aba + ntu` |
 
-The new cuts are made only on evidence:
+ABLT makes one of these new cuts only when it has evidence for it:
 
 - The verb prefixes (subject, tense, negative) come from the documented tables of Luganda
   grammar.
@@ -117,8 +118,8 @@ The new cuts are made only on evidence:
   are cut only when the shorter root is also in that list.
 - Counting words (`abiri`, `asatu`) and "of" and "my" forms (`kyange`, `waffe`) are never
   read as verbs.
-- When the evidence is missing, the word is cut exactly as version 2.0 cut it. The version
-  1 and 2.0 grammar tables are unchanged.
+- A word without that evidence is cut exactly as version 2.0 cut it. The version 1 and 2.0
+  grammar tables are unchanged.
 
 Version 2.0 is still inside the package: `ABLT(version="2.0")` gives its rules and its model.
 
@@ -142,8 +143,8 @@ Version 2.0 is still inside the package: `ABLT(version="2.0")` gives its rules a
   forms that change shape (`ndikola`) are not cut yet.
 - A name at the very start of a sentence is treated as an ordinary word and may be cut.
 - It has been tested on Luganda only. Other Bantu languages need their own rule tables.
-- It is shown to cut words at grammar boundaries. Whether that makes a trained model learn
-  better, or from less text, is still being tested.
+- These tests show where ABLT cuts. Whether those cuts make a trained model learn better,
+  or from less text, is still being tested.
 
 ## Training text and credit
 

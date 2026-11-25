@@ -71,7 +71,7 @@ tokenizer.decode(ids)
 | Decoding gives back the exact text, 13,542 sentences | 13,542 of 13,542 | 13,542 of 13,542 | |
 
 The plain tokenizer is a check with no grammar rules. It makes fewer pieces because it
-leaves most words whole; ABLT cuts on purpose, at the grammar.
+leaves most words whole, where ABLT cuts them at the grammar.
 
 The 83 words were in view while 2.1 was built, so it was also checked on data the rules
 were not written from. On 1,526 forms of 45 verbs from UniMorph Luganda, a cut falls
@@ -91,9 +91,9 @@ A word is now cut in as many places as its grammar shows.
 | okusomesa (to teach) | `oku + somesa` | `oku + som + esa` |
 | abanoonyiboobubudamu (refugees) | `aba + noonyiboobubudamu` | `aba + noonyi + bo + obu + budamu` |
 
-The new cuts are made only on evidence: the prefixes come from documented Luganda grammar,
-and the root must be one of 732 verb roots seen in the training text. Without that
-evidence a word is cut exactly as in 2.0, and the version 1 grammar tables are unchanged.
+ABLT makes these cuts only when the prefixes are documented in Luganda grammar and the
+root is one of 732 verb roots seen in the training text. Every other word is cut exactly
+as in 2.0, and the version 1 grammar tables are unchanged.
 Version 2.0 is still in the package: `ABLT(version="2.0")`.
 
 ### What changed from version 1

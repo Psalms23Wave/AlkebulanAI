@@ -45,8 +45,7 @@ tokenizer.decode(ids)
 # 'Abantu basoma ebitabo.'   (exactly the text that went in)
 ```
 
-The package carries the model files on this page inside it, so `pip install ablt` is all
-that is needed.
+The package includes the model files on this page, so `pip install ablt` is enough.
 
 ## Reading the pieces
 
@@ -66,7 +65,7 @@ that is needed.
 | Decoding gives back the exact text, 13,542 sentences | 13,542 of 13,542 | 13,542 of 13,542 | |
 
 The plain tokenizer is a check with no grammar rules. It makes fewer pieces because it
-leaves most words whole; ABLT cuts on purpose, at the grammar.
+leaves most words whole, where ABLT cuts them at the grammar.
 
 Version 2.1 was also checked on data its rules were not written from. On 1,526 forms of 45
 verbs from UniMorph Luganda, a cut falls exactly where the root begins in 60.6% of forms
@@ -78,9 +77,9 @@ are cut differently from 2.0. The scripts are in the GitHub repository under
 
 A word is now cut in as many places as its grammar shows: `alisoma` is `a + li + soma`,
 `tebasobola` is `te + ba + sobola`, `okusomesa` is `oku + som + esa`, and
-`abanoonyiboobubudamu` (refugees) is `aba + noonyi + bo + obu + budamu`. The new cuts need
-evidence: prefixes from documented Luganda grammar and a root seen in the training text.
-Without it a word is cut as in 2.0. `ABLT(version="2.0")` still gives the earlier version.
+`abanoonyiboobubudamu` (refugees) is `aba + noonyi + bo + obu + budamu`. ABLT makes these
+cuts only when the prefixes are documented in Luganda grammar and the root was seen in the
+training text. Every other word is cut as in 2.0. `ABLT(version="2.0")` still gives the earlier version.
 
 ## Limits
 
@@ -88,9 +87,9 @@ Without it a word is cut as in 2.0. `ABLT(version="2.0")` still gives the earlie
 - About four verb forms in ten are still not cut into subject, tense and root.
 - Object markers, modified stems (`nkoze`) and forms such as `ndikola` are not cut yet.
 - A name at the very start of a sentence is treated as an ordinary word and may be cut.
-- Tested on Luganda only. Other Bantu languages need their own rule tables.
-- It is shown to cut words at grammar boundaries. Whether that makes a trained model learn
-  better, or from less text, is still being tested.
+- It has been tested on Luganda only. Other Bantu languages need their own rule tables.
+- These tests show where ABLT cuts. Whether those cuts make a trained model learn better,
+  or from less text, is still being tested.
 
 ## Files
 
