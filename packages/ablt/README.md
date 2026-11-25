@@ -18,23 +18,36 @@ It needs only `sentencepiece`. The trained Luganda model is inside the package.
 
 ## Use
 
+```bash
+ablt --cuts "Abanoonyiboobubudamu tebasobola kusoma, naye alisoma enkya."
+# Aba|noonyi|bo|obu|budamu te|ba|sobola ku|soma, n|aye a|li|soma en|kya.
+```
+
+The sentence means "Refugees cannot read, but he or she will read tomorrow." Each `|` is a
+cut at a grammar boundary: `te|ba|sobola` is not + they + be able, and `a|li|soma` is
+he or she + will + read.
+
+### In Python
+
 ```python
 from ablt import ABLT
 
 tokenizer = ABLT()
+text = "Abanoonyiboobubudamu tebasobola kusoma, naye alisoma enkya."
 
-tokenizer.tokenize("Abantu basoma ebitabo.")
-# ['▁Abaǀ', '▁ntu', '▁baǀ', '▁soma', '▁ebiǀ', '▁tabo', '.']
+tokenizer.tokenize(text)
+# ['▁Abaǀ', '▁noonyiǀ', '▁boǀ', '▁obuǀ', '▁budamu', '▁teǀ', '▁baǀ', '▁sobola', '▁kuǀ', '▁soma',
+#  ',', '▁nǀ', '▁aye', '▁aǀ', '▁liǀ', '▁soma', '▁enǀ', '▁kya', '.']
 
-ids = tokenizer.encode("Abantu basoma ebitabo.")
-tokenizer.decode(ids)
-# 'Abantu basoma ebitabo.'   (exactly the text that went in)
+ids = tokenizer.encode(text)
+tokenizer.decode(ids) == text
+# True   (decoding gives back exactly the text that went in)
 
-tokenizer.show_cuts("okusoma ebitabo")
-# 'oku|soma ebi|tabo'
+tokenizer.show_cuts("tebasobola kusoma")
+# 'te|ba|sobola ku|soma'
 
-tokenizer.morphemes("okusoma")
-# ['oku', 'soma']
+tokenizer.morphemes("tebasobola")
+# ['te', 'ba', 'sobola']
 ```
 
 ### From the terminal

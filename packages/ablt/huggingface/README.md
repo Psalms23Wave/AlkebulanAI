@@ -28,21 +28,26 @@ Psalms23Wave LLC, as part of Alkebulan AI.
 ```bash
 pip install ablt
 
-ablt --cuts "Abantu baagala okusoma ebitabo."
-# Aba|ntu ba|agala oku|soma ebi|tabo.
+ablt --cuts "Abanoonyiboobubudamu tebasobola kusoma, naye alisoma enkya."
+# Aba|noonyi|bo|obu|budamu te|ba|sobola ku|soma, n|aye a|li|soma en|kya.
 ```
+
+The sentence means "Refugees cannot read, but he or she will read tomorrow." Each `|` is a
+cut at a grammar boundary: `te|ba|sobola` is not + they + be able, and `a|li|soma` is
+he or she + will + read.
 
 ```python
 from ablt import ABLT
 
 tokenizer = ABLT()
+text = "Abanoonyiboobubudamu tebasobola kusoma, naye alisoma enkya."
 
-tokenizer.tokenize("Abantu basoma ebitabo.")
-# ['▁Abaǀ', '▁ntu', '▁baǀ', '▁soma', '▁ebiǀ', '▁tabo', '.']
+ids = tokenizer.encode(text)
+tokenizer.decode(ids) == text
+# True   (decoding gives back exactly the text that went in)
 
-ids = tokenizer.encode("Abantu basoma ebitabo.")
-tokenizer.decode(ids)
-# 'Abantu basoma ebitabo.'   (exactly the text that went in)
+tokenizer.morphemes("tebasobola")
+# ['te', 'ba', 'sobola']
 ```
 
 The package includes the model files on this page, so `pip install ablt` is enough.
