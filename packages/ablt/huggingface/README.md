@@ -36,6 +36,17 @@ The sentence means "Refugees need help." Each `|` is a cut at a grammar boundary
 first word is two words written as one, *abanoonyi* (seekers) and *b'obubudamu* (of refuge),
 and ABLT cuts it into the people + seek + of + the noun marker + refuge.
 
+### More examples
+
+| Sentence | Meaning | How ABLT cuts it |
+|---|---|---|
+| Abanoonyiboobubudamu beetaaga obuyambi. | Refugees need help. | `Aba|noonyi|bo|obu|budamu b|eetaaga obu|yambi.` |
+| Abanoonyiboobubudamu basaba obuyambi. | Refugees ask for help. | `Aba|noonyi|bo|obu|budamu ba|saba obu|yambi.` |
+| Abanoonyiboobubudamu baagala obuyambi. | Refugees want help. | `Aba|noonyi|bo|obu|budamu ba|agala obu|yambi.` |
+| Tuyambe abanoonyiboobubudamu. | Let us help refugees. | `Tu|yambe aba|noonyi|bo|obu|budamu.` |
+
+Each of these gives back the exact sentence when decoded.
+
 ```python
 from ablt import ABLT
 

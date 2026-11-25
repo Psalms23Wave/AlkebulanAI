@@ -5,7 +5,7 @@
 from .segmenter import cut, show_cuts, single_cut, split_word
 from .tokenizer import ABLT
 
-__version__ = "2.1.0"
+__version__ = "2.1.1"
 __author__ = "Mathew Sekanjako"
 __copyright__ = "Copyright 2025-2026 Mathew Sekanjako and Psalms23Wave LLC"
 __license__ = "Apache-2.0"

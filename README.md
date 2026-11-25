@@ -61,6 +61,15 @@ tokenizer.decode(ids)
 # 'Abantu basoma ebitabo.'   (exactly the text that went in)
 ```
 
+### Examples
+
+| Sentence | Meaning | How ABLT cuts it |
+|---|---|---|
+| Abanoonyiboobubudamu beetaaga obuyambi. | Refugees need help. | `Aba|noonyi|bo|obu|budamu b|eetaaga obu|yambi.` |
+| Abanoonyiboobubudamu basaba obuyambi. | Refugees ask for help. | `Aba|noonyi|bo|obu|budamu ba|saba obu|yambi.` |
+| Abanoonyiboobubudamu baagala obuyambi. | Refugees want help. | `Aba|noonyi|bo|obu|budamu ba|agala obu|yambi.` |
+| Tuyambe abanoonyiboobubudamu. | Let us help refugees. | `Tu|yambe aba|noonyi|bo|obu|budamu.` |
+
 ### What was measured
 
 | Test | ABLT 2.1 | ABLT 2.0 | Plain SentencePiece, same text and size |

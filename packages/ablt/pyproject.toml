@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ablt"
-version = "2.1.0"
+version = "2.1.1"
 description = "ABLT: a grammar-first tokenizer for Luganda and other Bantu languages"
 readme = "README.md"
 requires-python = ">=3.9"
