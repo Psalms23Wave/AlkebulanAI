@@ -1,6 +1,6 @@
 # ABLT
 
-**Alkebulan Bantu-Luganda Tokenizer, version 2.** A tokenizer for Luganda that cuts words
+**Alkebulan Bantu-Luganda Tokenizer, version 2.1.** A tokenizer for Luganda that cuts words
 where their meaning changes, using the grammar of the language, before a statistical
 tokenizer (SentencePiece) takes over.
 
@@ -61,15 +61,15 @@ ablt < story.txt                                   # a whole file, line by line
 
 ## What was measured
 
-Run `python packages/ablt/tools/evaluate.py` to reproduce these.
+Run `python packages/ablt/tools/evaluate.py` and `python packages/ablt/tools/evaluate_rules.py`
+to reproduce these.
 
-| Test | ABLT version 2 | Plain SentencePiece trained on the same text, same size |
-|---|---|---|
-| Cuts fall on grammar boundaries, 83 Luganda words (F1) | 91.7% | 41.3% |
-| The same words written with a capital letter | 93.3% | 72.7% |
-| Words cut fully correctly | 86.7% | 18.1% |
-| Pieces per word, 7,060 sentences of MasakhaNER 2.0 Luganda | 2.20 | 1.94 |
-| Decoding gives back the exact text, 13,542 sentences | 13,542 of 13,542 | |
+| Test | ABLT 2.1 | ABLT 2.0 | Plain SentencePiece, same text and size |
+|---|---|---|---|
+| Cuts fall on grammar boundaries, 83 Luganda words (F1) | 99.5% | 91.7% | 41.3% |
+| Words cut fully correctly | 98.8% | 86.7% | 18.1% |
+| Pieces per word, 7,060 sentences of MasakhaNER 2.0 Luganda | 2.21 | 2.20 | 1.94 |
+| Decoding gives back the exact text, 13,542 sentences | 13,542 of 13,542 | 13,542 of 13,542 | |
 
 The plain tokenizer is a check built for this comparison: it is trained on the same text
 with the same settings and has no grammar rules. It makes fewer pieces because it leaves
@@ -77,6 +77,50 @@ most words whole. ABLT cuts on purpose, at the grammar.
 
 On the same MasakhaNER sentences, the tokenizers of two general models make 2.69 pieces per
 word (Qwen2.5) and 2.89 (GPT-2).
+
+### Checks on data the rules were not written from
+
+The 83 words were in view while version 2.1 was built, so two outside sets were used as
+well. Each was split in two; the rules were tuned on one half and are reported on the other.
+
+| Check | ABLT 2.1 | ABLT 2.0 |
+|---|---|---|
+| UniMorph Luganda, 1,526 forms of 45 verbs: a cut falls exactly where the root begins | 60.6% | 7.8% |
+| The same forms: a cut falls inside the listed verb | 11.2% | 21.5% |
+| MasakhaPOS Luganda test set, 240 numbers: cut differently from 2.0 | 0 | |
+| The same set, 2,308 nouns: cut differently from 2.0 | 6 (0.3%) | |
+| Words in the 83-word list that were right in 2.0 and are wrong in 2.1 | 0 | |
+
+The six nouns are verb forms and verb-built words that the taggers marked as nouns
+(`Agamba`, `bikozesebwa`), and the joined word `abanoonyiboobubudamu`.
+
+## What changed in version 2.1
+
+A word is now cut in as many places as its grammar shows.
+
+| Word | Version 2.0 | Version 2.1 |
+|---|---|---|
+| alisoma (he or she will read) | `alisoma` | `a + li + soma` |
+| tebasobola (they cannot) | `tebasobola` | `te + ba + sobola` |
+| okusomesa (to teach) | `oku + somesa` | `oku + som + esa` |
+| agenda (he or she goes) | `ag + enda` | `a + genda` |
+| abanoonyiboobubudamu (refugees) | `aba + noonyiboobubudamu` | `aba + noonyi + bo + obu + budamu` |
+| abantu (people) | `aba + ntu` | `aba + ntu` |
+
+The new cuts are made only on evidence:
+
+- The verb prefixes (subject, tense, negative) come from the documented tables of Luganda
+  grammar.
+- The root must be one of 732 verb roots seen at least five times after `oku-` in the
+  training text.
+- Passive, applied and causative endings (`-ibwa`, `-ebwa`, `-ira`, `-era`, `-isa`, `-esa`)
+  are cut only when the shorter root is also in that list.
+- Counting words (`abiri`, `asatu`) and "of" and "my" forms (`kyange`, `waffe`) are never
+  read as verbs.
+- When the evidence is missing, the word is cut exactly as version 2.0 cut it. The version
+  1 and 2.0 grammar tables are unchanged.
+
+Version 2.0 is still inside the package: `ABLT(version="2.0")` gives its rules and its model.
 
 ## What changed from version 1
 
@@ -89,18 +133,17 @@ word (Qwen2.5) and 2.89 (GPT-2).
 | A root after a prefix | a different piece from the root alone | the same piece |
 | Text is rewritten before tokenizing | yes (spaces added round punctuation) | no |
 
-The grammar rules themselves are the version 1 rules, unchanged: the longest noun-class
-prefix, otherwise the longest verb extension. Each word is cut in at most one place.
-
 ## Limits
 
 - The answer key has 83 words. It needs checking and extending by Luganda speakers.
-- Each word is cut once. `alisoma` becomes `ali|soma`, where a full analysis is
-  `a|li|soma`.
+- About four verb forms in ten are still not cut into subject, tense and root, because the
+  root is not among the 732 seen in the training text.
+- Object markers (`a-ki-soma`, he reads it), modified stems (`nkoze`) and the first-person
+  forms that change shape (`ndikola`) are not cut yet.
 - A name at the very start of a sentence is treated as an ordinary word and may be cut.
 - It has been tested on Luganda only. Other Bantu languages need their own rule tables.
 - It is shown to cut words at grammar boundaries. Whether that makes a trained model learn
-  better, or from less text, has not been tested yet.
+  better, or from less text, is still being tested.
 
 ## Training text and credit
 
@@ -111,6 +154,7 @@ released under CC BY-SA 4.0. One line in ten was held back and used only for tes
 ## Rebuilding the model
 
 ```bash
+python packages/ablt/tools/build_lexicon.py     # the word lists the rules check against
 python packages/ablt/tools/train_model.py    # trains and writes the bundled model
 python packages/ablt/tools/evaluate.py       # prints the table above
 python -m pytest packages/ablt/tests -q

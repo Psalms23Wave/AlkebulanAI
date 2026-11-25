@@ -29,21 +29,13 @@ def main(arguments: list[str] | None = None) -> int:
         help="text to tokenize; if left out, lines are read from standard input",
     )
     output = parser.add_mutually_exclusive_group()
-    output.add_argument(
-        "--cuts", action="store_true", help="show the text with | at each grammar cut"
-    )
-    output.add_argument(
-        "--ids", action="store_true", help="show piece numbers instead of pieces"
-    )
+    output.add_argument("--cuts", action="store_true", help="show the text with | at each grammar cut")
+    output.add_argument("--ids", action="store_true", help="show piece numbers instead of pieces")
     credit = f"ablt {__version__}. Copyright 2025-2026 Mathew Sekanjako and Psalms23Wave LLC. Apache-2.0."
     parser.add_argument("--version", action="version", version=credit)
     options = parser.parse_args(arguments)
 
-    lines = (
-        [" ".join(options.text)]
-        if options.text
-        else (line.rstrip("\n") for line in sys.stdin)
-    )
+    lines = [" ".join(options.text)] if options.text else (line.rstrip("\n") for line in sys.stdin)
     tokenizer = None if options.cuts else ABLT()
     for line in lines:
         if options.cuts:

@@ -12,7 +12,7 @@ tags:
   - sentencepiece
 ---
 
-# ABLT: Alkebulan Bantu-Luganda Tokenizer, version 2
+# ABLT: Alkebulan Bantu-Luganda Tokenizer, version 2.1
 
 A tokenizer for Luganda that cuts words where their meaning changes, using the grammar of
 the language, before a statistical tokenizer (SentencePiece) takes over.
@@ -58,35 +58,51 @@ that is needed.
 
 ## What was measured
 
-| Test | ABLT version 2 | Plain SentencePiece trained on the same text, same size |
-|---|---|---|
-| Cuts fall on grammar boundaries, 83 Luganda words (F1) | 91.7% | 41.3% |
-| The same words written with a capital letter | 93.3% | 72.7% |
-| Pieces per word, 7,060 sentences of MasakhaNER 2.0 Luganda | 2.20 | 1.94 |
-| Decoding gives back the exact text, 13,542 sentences | 13,542 of 13,542 | |
+| Test | ABLT 2.1 | ABLT 2.0 | Plain SentencePiece, same text and size |
+|---|---|---|---|
+| Cuts fall on grammar boundaries, 83 Luganda words (F1) | 99.5% | 91.7% | 41.3% |
+| Words cut fully correctly | 98.8% | 86.7% | 18.1% |
+| Pieces per word, 7,060 sentences of MasakhaNER 2.0 Luganda | 2.21 | 2.20 | 1.94 |
+| Decoding gives back the exact text, 13,542 sentences | 13,542 of 13,542 | 13,542 of 13,542 | |
 
 The plain tokenizer is a check with no grammar rules. It makes fewer pieces because it
-leaves most words whole; ABLT cuts on purpose, at the grammar. The scripts that produce
-these numbers are in the GitHub repository under `packages/ablt/tools/`.
+leaves most words whole; ABLT cuts on purpose, at the grammar.
+
+Version 2.1 was also checked on data its rules were not written from. On 1,526 forms of 45
+verbs from UniMorph Luganda, a cut falls exactly where the root begins in 60.6% of forms
+(7.8% in 2.0). On the MasakhaPOS Luganda test set, none of 240 numbers and 6 of 2,308 nouns
+are cut differently from 2.0. The scripts are in the GitHub repository under
+`packages/ablt/tools/`.
+
+## What changed in version 2.1
+
+A word is now cut in as many places as its grammar shows: `alisoma` is `a + li + soma`,
+`tebasobola` is `te + ba + sobola`, `okusomesa` is `oku + som + esa`, and
+`abanoonyiboobubudamu` (refugees) is `aba + noonyi + bo + obu + budamu`. The new cuts need
+evidence: prefixes from documented Luganda grammar and a root seen in the training text.
+Without it a word is cut as in 2.0. `ABLT(version="2.0")` still gives the earlier version.
 
 ## Limits
 
 - The answer list has 83 words. It needs checking and extending by Luganda speakers.
-- Each word is cut once. `alisoma` becomes `ali|soma`, where a full analysis is `a|li|soma`.
+- About four verb forms in ten are still not cut into subject, tense and root.
+- Object markers, modified stems (`nkoze`) and forms such as `ndikola` are not cut yet.
 - A name at the very start of a sentence is treated as an ordinary word and may be cut.
 - Tested on Luganda only. Other Bantu languages need their own rule tables.
 - It is shown to cut words at grammar boundaries. Whether that makes a trained model learn
-  better, or from less text, has not been tested yet.
+  better, or from less text, is still being tested.
 
 ## Files
 
 | File | What it is |
 |---|---|
-| `ablt-luganda-v2.model` | the trained SentencePiece model (unigram, 6,000 pieces) |
-| `ablt-luganda-v2.joiners.json` | the pieces that can be joined to the next piece |
-| `SHA256SUMS` | fingerprints of the two files above |
+| `ablt-luganda-v2.1.model` | version 2.1: the trained SentencePiece model (unigram, 6,000 pieces) |
+| `ablt-luganda-v2.1.joiners.json` | version 2.1: the pieces that can be joined to the next piece |
+| `ablt-luganda-v2.model`, `ablt-luganda-v2.joiners.json` | version 2.0 |
+| `SHA256SUMS` | fingerprints of the files above |
 
-Vocabulary size: 6,981 (6,000 pieces, 980 joined pieces, 1 join token).
+Vocabulary size: 6,962 in version 2.1 (6,000 pieces, 961 joined pieces, 1 join token);
+6,981 in version 2.0.
 
 ## Training text and credit
 

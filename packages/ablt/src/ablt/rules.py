@@ -76,15 +76,68 @@ LOANWORDS: list[str] = [
 # Every noun-class prefix, longest first, so the longest match is tried first.
 NOUN_PREFIXES_LONGEST_FIRST: tuple[str, ...] = tuple(
     sorted(
-        {
-            prefix
-            for forms in NOUN_CLASSES.values()
-            for prefixes in forms.values()
-            for prefix in prefixes
-        },
+        {prefix for forms in NOUN_CLASSES.values() for prefixes in forms.values() for prefix in prefixes},
         key=lambda prefix: (-len(prefix), prefix),
     )
 )
 VERB_EXTENSIONS_LONGEST_FIRST: tuple[str, ...] = tuple(
     sorted(VERB_EXTENSIONS, key=lambda ext: (-len(ext), ext))
 )
+
+# ---------------------------------------------------------------------------------------
+# Added in version 2.1. Everything above is unchanged.
+#
+# The tables below are the closed sets of the Luganda verb, as documented in published
+# grammar (subject markers, tense markers and negatives as tabulated in "Luganda",
+# Wikipedia, read 24 November 2026; see docs/research/2026-11-24-luganda-verb-grammar-sources.md
+# in the Alkebulan AI project). They say what a verb prefix may look like. A cut is made
+# only when the root that follows is also found in the training text (ablt.lexicon).
+# ---------------------------------------------------------------------------------------
+
+# Subject markers: persons, then noun classes. Longer forms are tried first.
+SUBJECT_MARKERS: tuple[str, ...] = (
+    "tu", "mu", "ba", "gu", "gi", "zi", "ki", "bi", "li", "ga", "ka", "bu", "lu", "ku", "n", "o", "a", "e",
+)  # fmt: skip
+
+# A person's subject marker written together with past -a-: twa-kola, ya-kola.
+SUBJECT_WITH_PAST: tuple[str, ...] = ("twa", "mwa", "nna", "wa", "ya")
+
+# Tense markers that stand between the subject marker and the root.
+TENSE_MARKERS_BEFORE_ROOT: tuple[str, ...] = ("naa", "noo", "nee", "nna", "kya", "li", "a")
+# The near future is -naa-, but -noo- after o- (you) and -nee- after e- (class 9).
+TENSE_ONLY_AFTER: dict[str, str] = {"noo": "o", "nee": "e"}
+
+# te- before a subject marker; si-, to-, ta- already say who (I, you, he or she).
+NEGATIVE_BEFORE_SUBJECT: str = "te"
+NEGATIVE_WITH_PERSON: tuple[str, ...] = ("si", "to", "ta")
+
+# Passive, applied and causative endings, each with the final vowel.
+EXTENSIONS_CUT_FROM_A_KNOWN_ROOT: tuple[str, ...] = ("ibwa", "ebwa", "ira", "era", "isa", "esa")
+
+# Counting words 1 to 5 agree with their noun (babiri, asatu, ataano). They are not verbs.
+NUMERAL_ROOTS: tuple[str, ...] = ("mu", "biri", "bbiri", "satu", "ssatu", "na", "nnya", "taano", "ttaano")
+
+# "Of" for each noun class, and the endings that make "my", "your", "our" from it.
+OF_FORMS: tuple[str, ...] = (
+    "wa", "ba", "gwa", "gya", "ya", "za", "kya", "bya", "lya", "ga", "ka", "bwa", "lwa", "kwa", "twa",
+)  # fmt: skip
+POSSESSIVE_ENDINGS: tuple[str, ...] = (
+    "ange", "o", "e", "affe", "ammwe", "aabwe", "abwe", "aago", "aazo", "aalyo", "aakyo", "aabyo",
+)  # fmt: skip
+
+# "Of" before a word that starts with a vowel, when two words are written as one:
+# abanoonyi + b' + obubudamu is written abanoonyiboobubudamu.
+OF_BEFORE_A_VOWEL: tuple[str, ...] = (
+    "lw", "ly", "ky", "by", "bw", "gw", "tw", "kw", "gy", "b", "w", "y", "z", "g", "k", "l",
+)  # fmt: skip
+
+# Noun-class prefixes that begin with a vowel. A word cut by one of these, whose remainder
+# is a known noun root, stays a noun.
+NOUN_PREFIXES_BEFORE_A_NOUN_ROOT: tuple[str, ...] = (
+    "aba", "omu", "emi", "ama", "eki", "ebi", "aka", "obu", "olu", "ogu", "aga", "otu", "eri", "oku",
+    "omw", "emy", "eky", "eby", "obw", "olw", "ogw", "okw", "otw", "ery", "en", "em", "ab", "ak", "ag",
+    "am", "ol", "og", "ez",
+)  # fmt: skip
+
+# Words tagged as conjunctions in MasakhaPOS Luganda that the verb rules would misread.
+WORDS_LEFT_WHOLE: frozenset[str] = frozenset({"wabula"})

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ablt"
-version = "2.0.0"
+version = "2.1.0"
 description = "ABLT: a grammar-first tokenizer for Luganda and other Bantu languages"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -29,4 +29,4 @@ Contact = "https://www.psalms23wave.com/contact"
 where = ["src"]
 
 [tool.setuptools.package-data]
-ablt = ["models/*.model", "models/*.json", "models/SHA256SUMS", "models/README.txt"]
+ablt = ["models/*.model", "models/*.json", "models/SHA256SUMS", "models/README.txt", "lexicon/*.tsv", "lexicon/*.txt"]

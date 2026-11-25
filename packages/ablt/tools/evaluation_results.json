@@ -1,8 +1,30 @@
 {
-  "vocab_size": 6981,
+  "vocab_size": 6962,
   "base_size": 6000,
   "systems": {
-    "ABLT version 2": {
+    "ABLT version 2.1": {
+      "cuts_on_grammar_boundaries": {
+        "f1_percent": 99.5,
+        "recall_percent": 98.9,
+        "precision_percent": 100.0,
+        "words_fully_correct_percent": 98.8,
+        "words": 83,
+        "unusable": 0
+      },
+      "same_with_a_capital_letter": {
+        "f1_percent": 99.5,
+        "recall_percent": 98.9,
+        "precision_percent": 100.0,
+        "words_fully_correct_percent": 98.8,
+        "words": 83,
+        "unusable": 0
+      },
+      "pieces_per_word": {
+        "held-out lines": 2.335,
+        "MasakhaNER 2.0 Luganda": 2.21
+      }
+    },
+    "ABLT version 2.0": {
       "cuts_on_grammar_boundaries": {
         "f1_percent": 91.7,
         "recall_percent": 88.3,
@@ -48,11 +70,19 @@
     }
   },
   "exact_round_trip": {
-    "held-out lines": {
+    "2.1, held-out lines": {
       "exact": 6482,
       "of": 6482
     },
-    "MasakhaNER 2.0 Luganda": {
+    "2.1, MasakhaNER 2.0 Luganda": {
+      "exact": 7060,
+      "of": 7060
+    },
+    "2.0, held-out lines": {
+      "exact": 6482,
+      "of": 6482
+    },
+    "2.0, MasakhaNER 2.0 Luganda": {
       "exact": 7060,
       "of": 7060
     }

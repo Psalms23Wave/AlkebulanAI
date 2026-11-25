@@ -28,7 +28,7 @@ from ablt.segmenter import cut  # noqa: E402
 
 CORPUS = REPO_ROOT / "data" / "MergedTok.txt"
 WORK_DIR = PACKAGE_ROOT / "tools" / "work"
-BUNDLED_MODEL = PACKAGE_ROOT / "src" / "ablt" / "models" / "ablt-luganda-v2.model"
+BUNDLED_MODEL = PACKAGE_ROOT / "src" / "ablt" / "models" / "ablt-luganda-v2.1.model"
 BUNDLED_JOINERS = BUNDLED_MODEL.with_suffix(".joiners.json")
 VOCAB_SIZE = 6000
 SPLIT_SEED = 42
@@ -79,18 +79,14 @@ def joining_pieces(training_lines: list[str], model: Path) -> list[str]:
 def main() -> None:
     WORK_DIR.mkdir(parents=True, exist_ok=True)
     training_lines, held_out_lines = split_corpus()
-    (WORK_DIR / "held_out.txt").write_text(
-        "\n".join(held_out_lines) + "\n", encoding="utf-8"
-    )
+    (WORK_DIR / "held_out.txt").write_text("\n".join(held_out_lines) + "\n", encoding="utf-8")
     # A space at each grammar cut keeps SentencePiece from joining pieces across it.
     train([" ".join(cut(line)) for line in training_lines], WORK_DIR / "grammar_first")
     train(training_lines, WORK_DIR / "plain_check")
     BUNDLED_MODEL.parent.mkdir(parents=True, exist_ok=True)
     BUNDLED_MODEL.write_bytes((WORK_DIR / "grammar_first.model").read_bytes())
     joiners = joining_pieces(training_lines, BUNDLED_MODEL)
-    BUNDLED_JOINERS.write_text(
-        json.dumps(joiners, ensure_ascii=False, indent=0) + "\n", encoding="utf-8"
-    )
+    BUNDLED_JOINERS.write_text(json.dumps(joiners, ensure_ascii=False, indent=0) + "\n", encoding="utf-8")
     print(f"{len(joiners)} pieces have a joined form")
     print(f"trained on {len(training_lines)} lines, held back {len(held_out_lines)}")
     print(f"model written to {BUNDLED_MODEL.relative_to(REPO_ROOT)}")

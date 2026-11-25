@@ -1,6 +1,6 @@
 # Copyright 2025-2026 Mathew Sekanjako and Psalms23Wave LLC
 # SPDX-License-Identifier: Apache-2.0
-"""ABLT: the Alkebulan Bantu-Luganda Tokenizer, version 2."""
+"""ABLT: the Alkebulan Bantu-Luganda Tokenizer."""
 
 from __future__ import annotations
 
@@ -10,10 +10,14 @@ from pathlib import Path
 
 import sentencepiece as spm
 
-from .segmenter import cut, show_cuts, split_word
+from .segmenter import Splitter, cut, show_cuts, single_cut, split_word
 
-BUNDLED_MODEL = "ablt-luganda-v2.model"
-BUNDLED_JOINERS = "ablt-luganda-v2.joiners.json"
+LATEST = "2.1"
+# Each version is a set of cutting rules and the model trained on text cut by those rules.
+BUNDLED: dict[str, tuple[str, Splitter]] = {
+    "2.1": ("ablt-luganda-v2.1", split_word),  # several cuts in a word
+    "2.0": ("ablt-luganda-v2", single_cut),  # one cut in a word
+}
 WORD_START = "▁"
 JOIN_MARK = "ǀ"
 JOIN_TOKEN = "<join>"
@@ -28,6 +32,9 @@ class ABLT:
     >>> tokenizer.decode(tokenizer.encode("Abantu basoma ebitabo."))
     'Abantu basoma ebitabo.'
 
+    ``ABLT(version="2.0")`` gives the earlier rules (one cut in a word) and their model,
+    so results made with version 2.0 can be repeated.
+
     A piece that ends with ``ǀ`` is joined to the piece after it: ``▁abaǀ`` then
     ``▁ntu`` is the one word ``abantu``. Roots such as ``▁ntu`` and ``▁soma`` are
     the same piece whether they stand alone or follow a prefix.
@@ -41,29 +48,26 @@ class ABLT:
         self,
         model_path: str | Path | None = None,
         joiners_path: str | Path | None = None,
+        version: str = LATEST,
     ) -> None:
+        if version not in BUNDLED:
+            raise ValueError(f"unknown version {version!r}; choose from {sorted(BUNDLED)}")
+        self.version = version
+        name, self._splitter = BUNDLED[version]
         if model_path is None:
             package = resources.files("ablt") / "models"
-            with resources.as_file(package / BUNDLED_MODEL) as bundled:
+            with resources.as_file(package / f"{name}.model") as bundled:
                 self._processor = spm.SentencePieceProcessor(model_file=str(bundled))
-            joiners = json.loads(
-                (package / BUNDLED_JOINERS).read_text(encoding="utf-8")
-            )
+            joiners = json.loads((package / f"{name}.joiners.json").read_text(encoding="utf-8"))
         else:
             self._processor = spm.SentencePieceProcessor(model_file=str(model_path))
             joiners_file = (
-                Path(joiners_path)
-                if joiners_path
-                else Path(model_path).with_suffix(".joiners.json")
+                Path(joiners_path) if joiners_path else Path(model_path).with_suffix(".joiners.json")
             )
             joiners = json.loads(joiners_file.read_text(encoding="utf-8"))
         self.base_size = self._processor.get_piece_size()
-        self._joiner_base_ids = [
-            self._processor.piece_to_id(piece) for piece in joiners
-        ]
-        self._joined_id = {
-            base: self.base_size + i for i, base in enumerate(self._joiner_base_ids)
-        }
+        self._joiner_base_ids = [self._processor.piece_to_id(piece) for piece in joiners]
+        self._joined_id = {base: self.base_size + i for i, base in enumerate(self._joiner_base_ids)}
         self.join_token_id = self.base_size + len(self._joiner_base_ids)
 
     @property
@@ -75,25 +79,21 @@ class ABLT:
 
     def morphemes(self, word: str) -> list[str]:
         """The grammar parts of one word, for example ``['oku', 'soma']``."""
-        return split_word(word)
+        return self._splitter(word)
 
     def show_cuts(self, text: str) -> str:
         """The text with ``|`` at every grammar cut, for reading."""
-        return show_cuts(text)
+        return show_cuts(text, splitter=self._splitter)
 
     def encode(self, text: str) -> list[int]:
         """Piece numbers for a text. ``decode`` gives the exact text back."""
-        chunks = cut(text)
+        chunks = cut(text, self._splitter)
         ids: list[int] = []
         for index, chunk_ids in enumerate(self._processor.encode(chunks, out_type=int)):
             if index < len(chunks) - 1 and chunk_ids:
                 joined = self._joined_id.get(chunk_ids[-1])
                 never_seen = joined is None
-                chunk_ids = (
-                    [*chunk_ids, self.join_token_id]
-                    if never_seen
-                    else [*chunk_ids[:-1], joined]
-                )
+                chunk_ids = [*chunk_ids, self.join_token_id] if never_seen else [*chunk_ids[:-1], joined]
             elif index < len(chunks) - 1:
                 chunk_ids = [self.join_token_id]
             ids.extend(chunk_ids)
@@ -121,10 +121,7 @@ class ABLT:
             return self._processor.id_to_piece(index)
         if index == self.join_token_id:
             return JOIN_TOKEN
-        return (
-            self._processor.id_to_piece(self._joiner_base_ids[index - self.base_size])
-            + JOIN_MARK
-        )
+        return self._processor.id_to_piece(self._joiner_base_ids[index - self.base_size]) + JOIN_MARK
 
     def tokenize(self, text: str) -> list[str]:
         """The pieces the model will see, as text."""
@@ -136,4 +133,4 @@ class ABLT:
         return piece.replace(WORD_START, "").replace(JOIN_MARK, "")
 
     def __repr__(self) -> str:
-        return f"ABLT(vocab_size={self.vocab_size}, base_size={self.base_size})"
+        return f"ABLT(version={self.version!r}, vocab_size={self.vocab_size}, base_size={self.base_size})"

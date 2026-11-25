@@ -1,0 +1,60 @@
+{
+  "vocab_size": 6981,
+  "base_size": 6000,
+  "systems": {
+    "ABLT version 2": {
+      "cuts_on_grammar_boundaries": {
+        "f1_percent": 91.7,
+        "recall_percent": 88.3,
+        "precision_percent": 95.4,
+        "words_fully_correct_percent": 86.7,
+        "words": 83,
+        "unusable": 0
+      },
+      "same_with_a_capital_letter": {
+        "f1_percent": 93.3,
+        "recall_percent": 89.4,
+        "precision_percent": 97.7,
+        "words_fully_correct_percent": 88.0,
+        "words": 83,
+        "unusable": 0
+      },
+      "pieces_per_word": {
+        "held-out lines": 2.324,
+        "MasakhaNER 2.0 Luganda": 2.203
+      }
+    },
+    "plain SentencePiece, same text and size (check)": {
+      "cuts_on_grammar_boundaries": {
+        "f1_percent": 41.3,
+        "recall_percent": 26.6,
+        "precision_percent": 92.6,
+        "words_fully_correct_percent": 18.1,
+        "words": 83,
+        "unusable": 0
+      },
+      "same_with_a_capital_letter": {
+        "f1_percent": 72.7,
+        "recall_percent": 59.6,
+        "precision_percent": 93.3,
+        "words_fully_correct_percent": 54.2,
+        "words": 83,
+        "unusable": 0
+      },
+      "pieces_per_word": {
+        "held-out lines": 1.952,
+        "MasakhaNER 2.0 Luganda": 1.94
+      }
+    }
+  },
+  "exact_round_trip": {
+    "held-out lines": {
+      "exact": 6482,
+      "of": 6482
+    },
+    "MasakhaNER 2.0 Luganda": {
+      "exact": 7060,
+      "of": 7060
+    }
+  }
+}

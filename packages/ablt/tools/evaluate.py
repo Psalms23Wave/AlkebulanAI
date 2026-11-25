@@ -115,19 +115,17 @@ def read_conll(files: tuple[str, ...]) -> list[str]:
 
 
 def pieces_per_word(pieces_for: Pieces, sentences: list[str]) -> float:
-    return round(
-        mean(len(pieces_for(s)) / len(s.split()) for s in sentences if s.split()), 3
-    )
+    return round(mean(len(pieces_for(s)) / len(s.split()) for s in sentences if s.split()), 3)
 
 
 def main() -> None:
     tokenizer = ABLT()
+    earlier = ABLT(version="2.0")
     plain = spm.SentencePieceProcessor(model_file=str(WORK_DIR / "plain_check.model"))
     systems: dict[str, Pieces] = {
-        "ABLT version 2": tokenizer.tokenize,
-        "plain SentencePiece, same text and size (check)": lambda text: plain.encode(
-            text, out_type=str
-        ),
+        f"ABLT version {tokenizer.version}": tokenizer.tokenize,
+        f"ABLT version {earlier.version}": earlier.tokenize,
+        "plain SentencePiece, same text and size (check)": lambda text: plain.encode(text, out_type=str),
     }
     results: dict = {
         "vocab_size": tokenizer.vocab_size,
@@ -144,33 +142,28 @@ def main() -> None:
         row = {
             "cuts_on_grammar_boundaries": boundary_scores(pieces_for),
             "same_with_a_capital_letter": boundary_scores(pieces_for, capitalise=True),
-            "pieces_per_word": {
-                label: pieces_per_word(pieces_for, lines)
-                for label, lines in texts.items()
-            },
+            "pieces_per_word": {label: pieces_per_word(pieces_for, lines) for label, lines in texts.items()},
         }
         results["systems"][name] = row
         print(f"\n{name}")
-        print(
-            f"  cuts on grammar boundaries (F1): {row['cuts_on_grammar_boundaries']['f1_percent']}%"
-        )
-        print(
-            f"  the same words with a capital:   {row['same_with_a_capital_letter']['f1_percent']}%"
-        )
+        print(f"  cuts on grammar boundaries (F1): {row['cuts_on_grammar_boundaries']['f1_percent']}%")
+        print(f"  the same words with a capital:   {row['same_with_a_capital_letter']['f1_percent']}%")
         fully_correct = row["cuts_on_grammar_boundaries"]["words_fully_correct_percent"]
         print(f"  words cut fully correctly:       {fully_correct}%")
         for label, value in row["pieces_per_word"].items():
             print(f"  pieces per word, {label}: {value}")
 
     exact = {}
-    for label, lines in texts.items():
-        same = sum(tokenizer.decode(tokenizer.encode(line)) == line for line in lines)
-        exact[label] = {"exact": same, "of": len(lines)}
-        print(f"\ndecode gives back the exact text, {label}: {same} of {len(lines)}")
+    for version in (tokenizer, earlier):
+        for label, lines in texts.items():
+            same = sum(version.decode(version.encode(line)) == line for line in lines)
+            exact[f"{version.version}, {label}"] = {"exact": same, "of": len(lines)}
+            print(
+                f"\ndecode gives back the exact text, version {version.version}, {label}: "
+                f"{same} of {len(lines)}"
+            )
     results["exact_round_trip"] = exact
-    RESULTS_FILE.write_text(
-        json.dumps(results, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
-    )
+    RESULTS_FILE.write_text(json.dumps(results, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

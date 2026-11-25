@@ -17,7 +17,7 @@
 **Owner:** [Psalms23Wave LLC](https://www.psalms23wave.com)
 **Contact:** [`psalms23wave.com/contact`](https://www.psalms23wave.com/contact)
 **GitHub:** [github.com/Psalms23Wave](https://github.com/Psalms23Wave) &nbsp;•&nbsp; **Hugging Face:** [Psalms23Wave/Alkebulan-AI](https://huggingface.co/Psalms23Wave/Alkebulan-AI)
-**Status:** version 2.0.0 (November 2026). Version 1 was the first release and is kept here.
+**Status:** version 2.1.0 (November 2026). Version 1 was the first release and is kept here.
 
 </div>
 
@@ -36,7 +36,7 @@
 
 ---
 
-## ABLT version 2
+## ABLT version 2.1
 
 A tokenizer for Luganda that cuts words where their meaning changes, using the grammar of
 the language, before a statistical tokenizer (SentencePiece) takes over. It installs as a
@@ -48,8 +48,8 @@ On PyPI: [pypi.org/project/ablt](https://pypi.org/project/ablt/). On Hugging Fac
 ```bash
 pip install ablt
 
-ablt --cuts "Abantu baagala okusoma ebitabo."
-# Aba|ntu ba|agala oku|soma ebi|tabo.
+ablt --cuts "Abanoonyiboobubudamu tebasobola kusoma, naye alisoma enkya."
+# Aba|noonyi|bo|obu|budamu te|ba|sobola ku|soma, n|aye a|li|soma en|kya.
 ```
 
 ```python
@@ -63,16 +63,38 @@ tokenizer.decode(ids)
 
 ### What was measured
 
-| Test | ABLT version 2 | Plain SentencePiece trained on the same text, same size |
-|---|---|---|
-| Cuts fall on grammar boundaries, 83 Luganda words (F1) | 91.7% | 41.3% |
-| The same words written with a capital letter | 93.3% | 72.7% |
-| Pieces per word, 7,060 sentences of MasakhaNER 2.0 Luganda | 2.20 | 1.94 |
-| Decoding gives back the exact text, 13,542 sentences | 13,542 of 13,542 | |
+| Test | ABLT 2.1 | ABLT 2.0 | Plain SentencePiece, same text and size |
+|---|---|---|---|
+| Cuts fall on grammar boundaries, 83 Luganda words (F1) | 99.5% | 91.7% | 41.3% |
+| Words cut fully correctly | 98.8% | 86.7% | 18.1% |
+| Pieces per word, 7,060 sentences of MasakhaNER 2.0 Luganda | 2.21 | 2.20 | 1.94 |
+| Decoding gives back the exact text, 13,542 sentences | 13,542 of 13,542 | 13,542 of 13,542 | |
 
 The plain tokenizer is a check with no grammar rules. It makes fewer pieces because it
-leaves most words whole; ABLT cuts on purpose, at the grammar. How each number was measured,
-how to repeat it, and the limits are in the [package guide](./packages/ablt/README.md).
+leaves most words whole; ABLT cuts on purpose, at the grammar.
+
+The 83 words were in view while 2.1 was built, so it was also checked on data the rules
+were not written from. On 1,526 forms of 45 verbs from UniMorph Luganda, a cut falls
+exactly where the root begins in 60.6% of forms (7.8% in 2.0). On the MasakhaPOS Luganda
+test set, none of 240 numbers and 6 of 2,308 nouns are cut differently from 2.0. How each
+number was measured, how to repeat it, and the limits are in the
+[package guide](./packages/ablt/README.md).
+
+### What changed in version 2.1
+
+A word is now cut in as many places as its grammar shows.
+
+| Word | Version 2.0 | Version 2.1 |
+|---|---|---|
+| alisoma (he or she will read) | `alisoma` | `a + li + soma` |
+| tebasobola (they cannot) | `tebasobola` | `te + ba + sobola` |
+| okusomesa (to teach) | `oku + somesa` | `oku + som + esa` |
+| abanoonyiboobubudamu (refugees) | `aba + noonyiboobubudamu` | `aba + noonyi + bo + obu + budamu` |
+
+The new cuts are made only on evidence: the prefixes come from documented Luganda grammar,
+and the root must be one of 732 verb roots seen in the training text. Without that
+evidence a word is cut exactly as in 2.0, and the version 1 grammar tables are unchanged.
+Version 2.0 is still in the package: `ABLT(version="2.0")`.
 
 ### What changed from version 1
 
@@ -81,8 +103,6 @@ how to repeat it, and the limits are in the [package guide](./packages/ablt/READ
 - Names and acronyms in the middle of a sentence are left whole.
 - A root is the same piece alone and after a prefix (`ntu` in `abantu`, `omuntu`, `ekintu`),
   so a model learns each root once.
-
-The grammar rules are the version 1 rules, unchanged.
 
 ---
 
@@ -512,7 +532,8 @@ Simpson-stabilised neural training below* — works for all of them.
 LLM on Hugging Face.
 
 **Version 2 (this release).** The Luganda tokenizer rebuilt as an installable package:
-exact decoding, capitalised words, names left whole, shared roots.
+exact decoding, capitalised words, names left whole, shared roots. Version 2.1 cuts verbs
+into subject, tense, root and extension.
 
 **Next.** Rule layers for Lusoga, Runyankore, Rukiga and Kinyarwanda, with a shared
 cross-Bantu SentencePiece vocabulary (the statistical layer transfers for free between
